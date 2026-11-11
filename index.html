@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form class="country">
+      <label class="country__label">
+        Wpisz państwo:
+        <input class="country__label__input" type="text" id="countryInput" />
+      </label>
+      <button class="country__button" id="countryButton">Pobierz dane</button>
+    </form>
+    <p id="resultMessage">Brak wyników</p>
+    <table id="table">
+      <tr>
+        <th>Name</th>
+        <th>Capital</th>
+        <th>Population</th>
+        <th>Region</th>
+        <th>Subregion</th>
+      </tr>
+      <tr>
+        <td id="countryName"></td>
+        <td id="countryCapital"></td>
+        <td id="countryPopulation"></td>
+        <td id="countryRegion"></td>
+        <td id="countrySubregion"></td>
+      </tr>
+    </table>
+    <div class="loader" id="loader">
+      <p>Loading...</p>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
