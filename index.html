@@ -8,29 +8,27 @@
   </head>
   <body>
     <form class="country">
-      <label class="country__label">
-        Wpisz państwo:
-        <input class="country__label__input" type="text" id="countryInput" />
-      </label>
+      <label class="country__label" for="regions"> Wybierz region: </label>
+      <select name="regions" id="regions" class="regions">
+        <option value="Africa">Africa</option>
+        <option value="Americas">Americas</option>
+        <option value="Asia">Asia</option>
+        <option value="Europe">Europe</option>
+        <option value="Oceania">Oceania</option>
+      </select>
       <button class="country__button" id="countryButton">Pobierz dane</button>
     </form>
     <p id="resultMessage">Brak wyników</p>
     <table id="table">
-      <tr>
+      <thead id="tableHead">
         <th>Name</th>
         <th>Capital</th>
         <th>Population</th>
-        <th>Region</th>
-        <th>Languagues</th>
-      </tr>
-      <tr>
-        <td id="countryName"></td>
-        <td id="countryCapital"></td>
-        <td id="countryPopulation"></td>
-        <td id="countryRegion"></td>
-        <td id="countryLanguages"></td>
-      </tr>
+        <th>Subregion</th>
+      </thead>
+      <tbody id="tableBody"></tbody>
     </table>
+
     <div class="loader" id="loader">
       <p>Loading...</p>
     </div>

@@ -16,6 +16,33 @@ body {
   gap: 100px;
 }
 
+.regions {
+  background-color: #242424;
+  color: white;
+
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px 40px 12px 14px;
+
+  cursor: pointer;
+  outline: none;
+
+  transition: background-color 0.2s ease-in-out;
+}
+
+.regions option {
+  padding: 10px;
+}
+
+.regions:hover {
+  background-color: #888;
+}
+
+select:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgb(255 107 53 / 20%);
+}
+
 .country {
   padding: 10px;
   border: 2px solid gray;
@@ -57,12 +84,20 @@ td {
   width: 300px;
   height: 100px;
   text-align: center;
+  transition: all 0.125s ease-in-out;
 }
 
 #table {
   display: none;
 }
 
+#table th {
+  background-color: #ccc;
+}
+
+#table td:hover {
+  background-color: #eee;
+}
 .loader {
   display: none;
   position: absolute;
