@@ -19,7 +19,7 @@ const COUNTRY_ROW = {
   capital: getElement("countryCapital"),
   population: getElement("countryPopulation"),
   region: getElement("countryRegion"),
-  subregion: getElement("countrySubregion"),
+  languages: getElement("countryLanguages"),
 };
 
 const API_KEY = "rc_live_7dd1f206b53143539439cabe907e50e7";
@@ -47,6 +47,7 @@ const getCountryData = async (country) => {
     }
 
     const data = await response.json();
+    console.log(data);
 
     if (data) {
       renderCountry(data.data.objects[0]);
@@ -67,12 +68,17 @@ const renderCountry = (data) => {
     capital: data.capitals?.[0]?.name ?? "Brak stolicy",
     population: data.population ?? "Brak ludzi",
     region: data.region || "Brak regionu",
-    subregion: data.subregion || "Brak subregionu",
+    languages: data.languages?.length ? data.languages : "Brak jezykow",
   };
 
   Object.entries(countryData).forEach(([key, value]) => {
     if (COUNTRY_ROW[key]) {
-      COUNTRY_ROW[key].textContent = value;
+      if (key === "languages") {
+        const languagesContent = value.map((language) => language.name);
+        COUNTRY_ROW[key].textContent = languagesContent.join(", ");
+      } else {
+        COUNTRY_ROW[key].textContent = value;
+      }
     }
   });
 };
