@@ -9,18 +9,30 @@ const getElement = (elementId) => {
 };
 
 const countryButton = getElement("countryButton");
+const countryInput = getElement("countryInput");
 const table = getElement("table");
-const tableBody = getElement("tableBody");
 const resultMessage = getElement("resultMessage");
 const loader = getElement("loader");
 
-const regionSelect = getElement("regions");
+const countryDetails = getElement("countryDetails");
+const currencyElement = getElement("currency");
+const officialNameElement = getElement("official_name");
+const flagImg = getElement("flag");
 
-let regionValue = regionSelect.value;
-let countries = [];
+const countryRow = getElement("countryRow");
+
+const COUNTRY_ROW = {
+  name: getElement("countryName"),
+  capital: getElement("countryCapital"),
+  population: getElement("countryPopulation"),
+  region: getElement("countryRegion"),
+  subregion: getElement("countrySubregion"),
+};
+
+let countryData;
 
 const API_KEY = "rc_live_7dd1f206b53143539439cabe907e50e7";
-const baseURL = `https://api.restcountries.com/countries/v5?region=`;
+const baseURL = `https://api.restcountries.com/countries/v5?q=`;
 
 const displayMessage = (content, color = "black") => {
   resultMessage.style.display = "block";
@@ -32,42 +44,11 @@ const changeLoaderDisplay = (mode) => {
   loader.style.display = mode === "block" ? "block" : "none";
 };
 
-const clearTableBody = () => {
-  while (tableBody.firstChild) {
-    tableBody.removeChild(tableBody.firstChild);
-  }
-};
-
-const createCountryRow = (country) => {
-  return `
-   <tr>
-         <td>${country.names.common}</td>
-         <td>${country.capitals?.[0]?.name ?? "Nieznane"}</td>
-         <td>${country.population}</td>
-         <td>${country.subregion}</td>
-    </tr>  
-  `;
-};
-
-const sortCountries = () => {
-  countries.sort((a, b) => a.names.common.localeCompare(b.names.common));
-};
-const renderCountries = () => {
-  sortCountries();
-  clearTableBody();
-  resultMessage.style.display = "none";
-  table.style.display = "block";
-  const rows = countries.map(createCountryRow);
-
-  for (const row of rows) {
-    tableBody.innerHTML += row;
-  }
-};
-
-const getCountriesByRegion = async () => {
+const getCountryData = async (country) => {
   try {
     changeLoaderDisplay("block");
-    const response = await fetch(`${baseURL}${regionValue}`, {
+    countryDetails.style.visibility = "hidden";
+    const response = await fetch(`${baseURL}${country}`, {
       headers: { Authorization: `Bearer ${API_KEY}` },
     });
     if (!response.ok) {
@@ -75,10 +56,11 @@ const getCountriesByRegion = async () => {
       return;
     }
 
-    const { data } = await response.json();
-
-    countries = data.objects;
-    renderCountries();
+    const data = await response.json();
+    countryData = data.data.objects[0];
+    if (countryData) {
+      renderCountry();
+    }
   } catch (error) {
     displayMessage(error.message, "red");
   } finally {
@@ -86,17 +68,52 @@ const getCountriesByRegion = async () => {
   }
 };
 
+const renderCountry = () => {
+  resultMessage.style.display = "none";
+  table.style.display = "block";
+
+  const columnValues = {
+    name: countryData.names.common,
+    capital: countryData.capitals?.[0]?.name ?? "Brak stolicy",
+    population: countryData.population ?? "Brak ludzi",
+    region: countryData.region || "Brak regionu",
+    subregion: countryData.subregion || "Brak subregionu",
+  };
+
+  Object.entries(columnValues).forEach(([key, value]) => {
+    if (COUNTRY_ROW[key]) {
+      COUNTRY_ROW[key].textContent = value;
+    }
+  });
+  fillCountryDetails();
+};
+
+const showCountryDetails = () => {
+  countryDetails.style.visibility = "visible";
+};
+
+const fillCountryDetails = () => {
+  flagImg.src = countryData.flag.url_png;
+  const currencies = countryData.currencies.map((currency) => currency.code);
+  currencyElement.textContent = currencies.join(", ");
+  officialNameElement.textContent = countryData.names.official;
+};
+
 const initApp = () => {
   displayMessage("Brak wyników");
 
   countryButton.addEventListener("click", (e) => {
     e.preventDefault();
-    getCountriesByRegion();
+    const countryValue = countryInput.value;
+    if (countryValue) {
+      getCountryData(countryValue);
+      countryInput.value = "";
+    } else {
+      displayMessage("Wpisz nazwę kraju!", "red");
+    }
   });
 
-  regionSelect.addEventListener("change", (event) => {
-    regionValue = event.target.value;
-  });
+  countryRow.addEventListener("click", showCountryDetails);
 };
 
 initApp();
